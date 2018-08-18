@@ -263,6 +263,10 @@ boolean  WiFiManager::startConfigPortal(char const *apName, char const *apPasswo
         break;
       }
     }
+
+    // give some time to the caller if they have asked for it
+    if (_setupLoopCallback)
+      _setupLoopCallback();
     yield();
   }
 
@@ -770,6 +774,11 @@ void WiFiManager::setCustomHeadElement(const char* element) {
 //if this is true, remove duplicated Access Points - defaut true
 void WiFiManager::setRemoveDuplicateAPs(boolean removeDuplicates) {
   _removeDuplicateAPs = removeDuplicates;
+}
+
+//callback in loop during the setup phase, to allow for third party execution during setup wait
+void WiFiManager::setSetupLoopCallback(void (*func)(void)) {
+  _setupLoopCallback = func;
 }
 
 
